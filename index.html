@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WEB BR - Lista de Ferramentas AI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            color: #fff;
+            padding: 40px 20px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #00d4ff, #7b2cbf);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #aaa;
+            margin-bottom: 40px;
+            font-size: 1rem;
+        }
+
+        .search-box {
+            max-width: 500px;
+            margin: 0 auto 40px;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 15px 20px 15px 50px;
+            border: 2px solid rgba(255,255,255,0.1);
+            border-radius: 30px;
+            background: rgba(255,255,255,0.05);
+            color: #fff;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .search-box input::placeholder {
+            color: #888;
+        }
+
+        .search-box input:focus {
+            border-color: #00d4ff;
+            background: rgba(255,255,255,0.1);
+        }
+
+        .search-box svg {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            fill: #888;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .tool-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tool-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, #00d4ff, #7b2cbf);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .tool-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .tool-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255,255,255,0.08);
+            border-color: rgba(0,212,255,0.3);
+            box-shadow: 0 10px 40px rgba(0,212,255,0.1);
+        }
+
+        .tool-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #00d4ff, #7b2cbf);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .tool-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #fff;
+        }
+
+        .tool-repo {
+            font-size: 0.85rem;
+            color: #888;
+            font-family: 'Courier New', monospace;
+        }
+
+        .tool-link {
+            font-size: 0.8rem;
+            color: #00d4ff;
+            margin-top: 10px;
+            opacity: 0.7;
+        }
+
+        /* Iframe Overlay */
+        .iframe-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 9999;
+            flex-direction: column;
+        }
+
+        .iframe-overlay.active {
+            display: flex;
+        }
+
+        .iframe-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 15px;
+            background: rgba(0,0,0,0.8);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .iframe-title {
+            font-size: 0.9rem;
+            color: #aaa;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .iframe-title .dot {
+            width: 8px;
+            height: 8px;
+            background: #00d4ff;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .close-btn {
+            width: 24px;
+            height: 24px;
+            background: rgba(255,255,255,0.1);
+            border: none;
+            border-radius: 50%;
+            color: #fff;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            line-height: 1;
+            padding: 0;
+        }
+
+        .close-btn:hover {
+            background: #ff4444;
+            transform: scale(1.1);
+        }
+
+        iframe {
+            flex: 1;
+            width: 100%;
+            border: none;
+            background: #fff;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            color: #666;
+            font-size: 0.85rem;
+        }
+
+        .footer a {
+            color: #00d4ff;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>WEB BR</h1>
+    <p class="subtitle">Top Repositories - Lista de Ferramentas AI</p>
+
+    <div class="search-box">
+        <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+        <input type="text" id="searchInput" placeholder="Find a repository..." onkeyup="filterTools()">
+    </div>
+
+    <div class="tools-grid" id="toolsGrid">
+        <!-- Tools will be generated by JavaScript -->
+    </div>
+
+    <div class="footer">
+        <p>Powered by <a href="https://github.com/web-br" target="_blank">web-br</a> GitHub Organization</p>
+    </div>
+
+    <!-- Iframe Overlay -->
+    <div class="iframe-overlay" id="iframeOverlay">
+        <div class="iframe-header">
+            <div class="iframe-title">
+                <span class="dot"></span>
+                <span id="iframeUrl">https://web-br.github.io/</span>
+            </div>
+            <button class="close-btn" onclick="closeIframe()" title="Fechar">×</button>
+        </div>
+        <iframe id="toolIframe" src="" allow="fullscreen"></iframe>
+    </div>
+
+    <script>
+        const tools = [
+            { name: 'cpf', repo: 'web-br/cpf', icon: 'C' },
+            { name: 'cdn', repo: 'web-br/cdn', icon: 'D' },
+            { name: 'kwai', repo: 'web-br/kwai', icon: 'K' },
+            { name: 'bluestacks', repo: 'web-br/bluestacks', icon: 'B' },
+            { name: 'iptv', repo: 'web-br/iptv', icon: 'I' },
+            { name: 'drama', repo: 'web-br/drama', icon: 'D' },
+            { name: 'pdt', repo: 'web-br/pdt', icon: 'P' },
+            { name: 'appstore', repo: 'web-br/appstore', icon: 'A' },
+            { name: 'brasil', repo: 'web-br/brasil', icon: 'B' },
+            { name: 'cep', repo: 'web-br/cep', icon: 'C' },
+            { name: 'qrcode', repo: 'web-br/qrcode', icon: 'Q' }
+        ];
+
+        function renderTools(filter = '') {
+            const grid = document.getElementById('toolsGrid');
+            const filtered = tools.filter(t => 
+                t.name.toLowerCase().includes(filter.toLowerCase()) ||
+                t.repo.toLowerCase().includes(filter.toLowerCase())
+            );
+
+            grid.innerHTML = filtered.map(tool => `
+                <div class="tool-card" onclick="openTool('${tool.name}')">
+                    <div class="tool-icon">${tool.icon}</div>
+                    <div class="tool-name">${tool.name}</div>
+                    <div class="tool-repo">${tool.repo}</div>
+                    <div class="tool-link">https://web-br.github.io/${tool.name}</div>
+                </div>
+            `).join('');
+        }
+
+        function openTool(name) {
+            const url = `https://web-br.github.io/${name}`;
+            document.getElementById('toolIframe').src = url;
+            document.getElementById('iframeUrl').textContent = url;
+            document.getElementById('iframeOverlay').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeIframe() {
+            document.getElementById('iframeOverlay').classList.remove('active');
+            document.getElementById('toolIframe').src = '';
+            document.body.style.overflow = '';
+        }
+
+        function filterTools() {
+            const input = document.getElementById('searchInput');
+            renderTools(input.value);
+        }
+
+        // Close on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeIframe();
+            }
+        });
+
+        // Close on clicking outside (optional)
+        document.getElementById('iframeOverlay').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeIframe();
+            }
+        });
+
+        // Initial render
+        renderTools();
+    </script>
+</body>
+</html>
